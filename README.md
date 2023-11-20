@@ -1,3 +1,5 @@
-QAP 4 - ELLIOTT BUTT (README)
+# QAP 4 - Elliott Butt
 
-All files for QAP 4 worked on by me have been uploaded to this repository. They are separated into their own folders (Project 1 + 2, Project 5, etc). Note that the Project 1 + 2 folder also has the .venv folder with matplotlib preinstalled.
+All files for QAP 4 worked on by me have been uploaded to this repository. They are separated into their own respective folders. 
+
+Note that the Project 1 + 2 folder also has the .venv folder with matplotlib preinstalled.
