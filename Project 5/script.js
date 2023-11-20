@@ -1,18 +1,20 @@
 // Program to inject customer info into HTML
 // Using a customer object and template literals
 // Date written: November 19, 2023
-// Authro: Elliott Butt
+// Author: Elliott Butt
 
 // define customer object
 const customer = {
   firstName: "John",
   lastName: "Doe",
+  title: "Dr.",
   birthDate: new Date(1991, 0, 1),
   gender: "male",
   phoneNum: "123-456-7890",
-  payMethod: "Visa",
-
+  payMethod: "AMEX",
   cardNum: "4567543245679876",
+  cardExp: new Date(2029, 7),
+  cardCVV: "123",
   licenceNum: "B1029839827CD",
   SIN: "123 456 789",
   addGuests: 3,
@@ -66,17 +68,22 @@ const customer = {
     return duration_ms / 86400000;
   },
 
-  getPronoun: function () {
-    let pronoun = "";
+  getPronouns: function () {
+    const pronouns = [];
+
     if (customer.gender == "male") {
-      pronoun = "He";
-    } else if (customer.gender == "female") {
-      pronoun = "She";
-    } else if (customer.gender == "non-binary" || customer.gender == "other") {
-      pronoun = "They";
+      pronouns.push("He", "Him", "His");
     }
 
-    return pronoun;
+    if (customer.gender == "female") {
+      pronouns.push("She", "Her", "Hers");
+    }
+
+    if (customer.gender == "non-binary" || customer.gender == "other") {
+      pronouns.push("They", "Them", "Their");
+    }
+
+    return pronouns;
   },
 
   checkDiscount: function () {
@@ -96,6 +103,27 @@ const customer = {
       : (discount = false);
 
     return discount;
+  },
+
+  checkCardStatus: function () {
+    const today = new Date();
+    let status = "";
+
+    if (this.cardExp.getFullYear() > today.getFullYear()) {
+      status = "OK";
+    } else if (this.cardExp.getFullYear() == today.getFullYear()) {
+      this.cardExp.getMonth() > today.getMonth()
+        ? (status = "OK")
+        : (status = "EXPIRED");
+    } else {
+      status = "EXPIRED";
+    }
+
+    return status;
+  },
+
+  hideCardNum: function () {
+    return "XXXX XXXX XXXX " + customer.cardNum.slice(12);
   },
 };
 
@@ -117,13 +145,11 @@ customer.checkDiscount()
   ? (discount_html = `eligible for a discount (50% or more of guests are minors)`)
   : (discount_html = `not eligible for a discount (less than 50% of guests are minors).`);
 
-let cardNumDsp = "XXXX XXXX XXXX " + customer.cardNum.slice(12);
-
-// create html to inject
+// generate html to inject (non-html line breaks are for code readability only)
 html_insert = `
-    <h1>Motel Customer Info</h1>
+    <h1>Motel Customer Information</h1>
 
-    <p>${customer.firstName} ${customer.lastName} is a 
+    <p>${customer.title} ${customer.firstName} ${customer.lastName} is a 
        ${customer.getAge()} year old ${customer.gender.toLowerCase()},
        born on <i>${customer.birthDate.toLocaleDateString("en-us", {
          year: "numeric",
@@ -147,13 +173,18 @@ html_insert = `
          month: "long",
          day: "numeric",
        })}</i>.
-       ${customer.getPronoun()} will be joined by ${customer.addGuests} 
+       ${customer.getPronouns()[0]} will be joined by ${customer.addGuests} 
        additional guests: ${guests_html}
        They will be staying a total of <b>${customer.getStayDuration()}</b> days.
-       ${customer.getPronoun()} has already paid for thier booking 
+       ${customer.getPronouns()[0]} has already paid for 
+       ${customer.getPronouns()[2].toLowerCase()} booking
        using ${customer.payMethod},
-       with card number ${cardNumDsp}.
-       ${customer.firstName} is ${discount_html}.
+       with card number ${customer.hideCardNum()}, 
+       EXP ${customer.cardExp.toLocaleDateString("en-us", {
+         year: "2-digit",
+         month: "2-digit",
+       })}.
+       ${customer.firstName} was ${discount_html}.
     </p>
 
     <h3><u>Room Preferences:</u></h3>
@@ -161,14 +192,14 @@ html_insert = `
 
     <h3><u>Contact Info</u></h3>
     <p>
-       <b>Phone Number</b>: ${customer.phoneNum} <br>
-       <br>
-       <b>Mailing address</b>: <br>
-          ${customer.firstName} ${customer.lastName} <br>
-          ${customer.mailAddress.street} <br>
-          ${customer.mailAddress.city} <br>
-          ${customer.mailAddress.province} ${customer.mailAddress.postal} <br>
-          ${customer.mailAddress.country} <br>
+    <b>Mailing address</b>: <br>
+    ${customer.title} ${customer.firstName} ${customer.lastName} <br>
+    ${customer.mailAddress.street} <br>
+    ${customer.mailAddress.city} <br>
+    ${customer.mailAddress.province} ${customer.mailAddress.postal} <br>
+    ${customer.mailAddress.country} <br>
+    <br>
+    <b>Phone Number</b>: ${customer.phoneNum} <br>
     </p>
 `;
 
