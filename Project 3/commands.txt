@@ -1,0 +1,96 @@
+# Command(s) 1
+touch PySample.py
+touch ExtraP.txt
+touch Stuff.py
+
+
+# Command(s) 2
+pwd
+ls
+ls -a
+ls -l (ls -al)
+
+
+# Command(s) 3
+less PySample.py
+less ExtraP.txt
+less Stuff.py
+
+head -n 3 PySample.py
+head -n 3 ExtraP.txt
+head -n 3 Stuff.py
+
+tail -n 3 PySample.py
+tail -n 3 ExtraP.txt
+tail -n 3 Stuff.py
+
+less ExtraP.txt
+q
+
+
+# Command(s) 4
+mkdir PythonCurrent
+mkdir PythonDone
+mkdir TextFiles
+
+mkdir PythonDone/2022
+mkdir PythonDone/2023
+
+mkdir TextFiles/Python
+mkdir TextFiles/Other
+
+
+# Command(s) 5
+cd PythonDone
+pwd
+ls (ls -a)
+cd ..
+
+
+# Command(s) 6
+cd PythonDone
+pwd
+cd 2023
+pwd
+cd ../..
+pwd
+cd TextFiles/Other
+pwd
+cd ../..
+pwd
+
+# Command(s) 7
+mv Stuff.py PythonDone/
+ls
+cp ExtraP.txt TextFiles/Python 
+
+
+# Command(s) 8
+cd TextFiles/Python
+head -6 ExtraP.txt 
+cd ../../
+
+
+# Command(s) 9
+cd PythonDone
+cat ../TextFiles/Python/ExtraP.txt
+cd ..
+
+
+# Command(s) 10
+find . -name "Stuff.py"
+
+
+# Command(s) 11
+chmod +rx-w PySample.py 
+
+
+# Command(s) 12
+grep -rl "getName"
+grep -rli "retailcost"
+grep -rli "retailcost" > FindResults.txt
+grep -rl "getName" >> FindResults.txt
+
+
+# Command(s) 12
+date +"%M"
