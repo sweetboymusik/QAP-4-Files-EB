@@ -10,6 +10,7 @@ const customer = {
   title: "Dr.",
   birthDate: new Date(1991, 0, 1),
   gender: "male",
+  pronouns: ["He", "Him", "His"],
   phoneNum: "123-456-7890",
   payMethod: "AMEX",
   cardNum: "4567543245679876",
@@ -48,7 +49,7 @@ const customer = {
   mailAddress: {
     street: "1 New Lane",
     city: "New Town",
-    province: "Alberta",
+    province: "Newfoundland and Labrador",
     postal: "A1B 1C1",
     country: "Canada",
   },
@@ -68,43 +69,6 @@ const customer = {
     return duration_ms / 86400000;
   },
 
-  getPronouns: function () {
-    const pronouns = [];
-
-    if (customer.gender == "male") {
-      pronouns.push("He", "Him", "His");
-    }
-
-    if (customer.gender == "female") {
-      pronouns.push("She", "Her", "Hers");
-    }
-
-    if (customer.gender == "non-binary" || customer.gender == "other") {
-      pronouns.push("They", "Them", "Their");
-    }
-
-    return pronouns;
-  },
-
-  checkDiscount: function () {
-    minorCounter = 0;
-    discount = false;
-
-    if (this.addGuests > 0) {
-      this.addGuestInfo.forEach((element) => {
-        if (element.minor == "yes") {
-          minorCounter += 1;
-        }
-      });
-    }
-
-    minorCounter >= (this.addGuests + 1) / 2
-      ? (discount = true)
-      : (discount = false);
-
-    return discount;
-  },
-
   checkCardStatus: function () {
     const today = new Date();
     let status = "";
@@ -122,28 +86,38 @@ const customer = {
     return status;
   },
 
-  hideCardNum: function () {
-    return "XXXX XXXX XXXX " + customer.cardNum.slice(12);
+  formatDates: function (date) {
+    formattedDate = date.toLocaleDateString("en-us", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+
+    return formattedDate;
+  },
+
+  genPrefsHTML: function () {
+    let prefs_html = "";
+
+    customer.roomPrefs.forEach((element) => {
+      prefs_html += `<li>${element}</li>`;
+    });
+
+    return prefs_html;
+  },
+
+  genAddGuestsHTML: function () {
+    let guests_html = "";
+
+    customer.addGuestInfo.forEach((element, index) => {
+      index < customer.addGuestInfo.length - 1
+        ? (guests_html += `${element.guestFirstName} (${element.relation}), `)
+        : (guests_html += `and ${element.guestFirstName} (${element.relation}).`);
+    });
+
+    return guests_html;
   },
 };
-
-// determine variables (only really necessary if you have different customer objects with different values)
-let prefs_html = "";
-customer.roomPrefs.forEach((element) => {
-  prefs_html += `<li>${element}</li>`;
-});
-
-let guests_html = "";
-customer.addGuestInfo.forEach((element, index) => {
-  index < customer.addGuestInfo.length - 1
-    ? (guests_html += `${element.guestFirstName} (${element.relation}), `)
-    : (guests_html += `and ${element.guestFirstName} (${element.relation}).`);
-});
-
-let discount_html = "";
-customer.checkDiscount()
-  ? (discount_html = `eligible for a discount (50% or more of guests are minors)`)
-  : (discount_html = `not eligible for a discount (less than 50% of guests are minors).`);
 
 // generate html to inject (non-html line breaks are for code readability only)
 html_insert = `
@@ -151,44 +125,31 @@ html_insert = `
 
     <p>${customer.title} ${customer.firstName} ${customer.lastName} is a 
        ${customer.getAge()} year old ${customer.gender.toLowerCase()},
-       born on <i>${customer.birthDate.toLocaleDateString("en-us", {
-         year: "numeric",
-         month: "long",
-         day: "numeric",
-       })}</i>. 
+       born on <i>${customer.formatDates(customer.birthDate)}</i>.
        The customer provided two pieces of goverment ID: 
        SIN ending in ${customer.SIN.slice(8)} 
        and licence number starting with ${customer.licenceNum.slice(0, 5)}.
     </p>
 
     <p>${customer.firstName} will be checking in on 
-       <i>${customer.checkDates.checkIn.toLocaleDateString("en-us", {
-         year: "numeric",
-         month: "long",
-         day: "numeric",
-       })}</i>
+       <i>${customer.formatDates(customer.checkDates.checkIn)}</i>
        and will be checking out on
-       <i>${customer.checkDates.checkOut.toLocaleDateString("en-us", {
-         year: "numeric",
-         month: "long",
-         day: "numeric",
-       })}</i>.
-       ${customer.getPronouns()[0]} will be joined by ${customer.addGuests} 
-       additional guests: ${guests_html}
+       <i>${customer.formatDates(customer.checkDates.checkIn)}</i>.
+       ${customer.pronouns[0]} will be joined by ${customer.addGuests} 
+       additional guests: ${customer.genAddGuestsHTML()}
        They will be staying a total of <b>${customer.getStayDuration()}</b> days.
-       ${customer.getPronouns()[0]} has already paid for 
-       ${customer.getPronouns()[2].toLowerCase()} booking
+       ${customer.pronouns[0]} has already paid for 
+       ${customer.pronouns[2].toLowerCase()} booking
        using ${customer.payMethod},
-       with card number ${customer.hideCardNum()}, 
+       with card number ending in ${customer.cardNum.slice(12)}, 
        EXP ${customer.cardExp.toLocaleDateString("en-us", {
          year: "2-digit",
          month: "2-digit",
        })}.
-       ${customer.firstName} was ${discount_html}.
     </p>
 
     <h3><u>Room Preferences:</u></h3>
-    <ol>${prefs_html}</ol>
+    <ol>${customer.genPrefsHTML()}</ol>
 
     <h3><u>Contact Info</u></h3>
     <p>
