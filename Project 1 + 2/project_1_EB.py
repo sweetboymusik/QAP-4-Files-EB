@@ -1,6 +1,6 @@
 # Program to calculate insurace policy info
-# Written for One Stop Insurance Compay
-# Dates written: November 17, 2023 -
+# Written for One Stop Insurance Company
+# Dates written: November 17, 2023 - November 24, 2023
 # Author: Elliott Butt
 
 # import libraries
@@ -28,6 +28,11 @@ PROV_LIST = ["AB", "BC", "MB", "NB", "NL", "NS",
 PAY_OPT_LIST = ["Full", "Monthly", "Down Pay"]
 PREV_CLAIM_DATES = []
 PREV_CLAIM_COSTS = []
+
+# welcome message
+print()
+print("Welcome to One Stop Insurance Company's insurance policy software. Please follow the instructions on the screen.")
+print()
 
 
 # define functions
@@ -316,14 +321,14 @@ while True:
     print(format_center(COMPANY_PHONE))
     print()
     print(f"Policy #: {NEXT_POLICY_NUM}")
-    print(f"Date: {str(inv_date):>10s}")
+    print(f"Inv Date: {str(inv_date.strftime('%B %d, %Y')):>10s}")
 
     print("-" * 36)
 
     print(f"{format_center('Customer Info')}")
     print()
     print(f"Name:     {(cust_first_name + ' ' + cust_last_name):<20s}")
-    print(f"Phone:    {format_phone_number(cust_phone_num):<12s}")
+    print(f"Phone #:  {format_phone_number(cust_phone_num):<12s}")
     print(f"Address:  {cust_street_add:<20s}")
     print(
         f"          {(cust_city_add + ', ' + cust_prov_add + ' ' + cust_postal_add[0:3] + ' ' + cust_postal_add[3:6]):<20s}")
@@ -343,6 +348,8 @@ while True:
 
     print("-" * 36)
 
+    print(f"{format_center('Totals')}")
+    print()
     print(f"Insurance Premiums:       {format_dollar_amt(insurance_premiums)}")
     print(f"Extra Costs:              {format_dollar_amt(extra_costs)}")
     print(
@@ -360,24 +367,27 @@ while True:
 
     print("-" * 36)
 
-    print("Previous Claims")
+    print(f"{format_center('Previous Claims')}")
     print()
     print_prev_claims(PREV_CLAIM_COSTS, PREV_CLAIM_DATES)
 
     print()
 
+    # increment policy number / reset previous claims
+    NEXT_POLICY_NUM += 1
+    PREV_CLAIM_COSTS = []
+    PREV_CLAIM_DATES = []
+
     # prompt to continue
     while True:
-        exit = input(
-            "Would you like to enter another policy? (Y/N): ")
+        cont = input(
+            "Would you like to enter another policy? (Y/N): ").upper()
 
-        if exit == "" or (exit != "Y" and exit != "N"):
+        if cont == "" or (cont != "Y" and cont != "N"):
             print("Must enter 'Y' or 'N'. Please re-enter.")
         else:
             break
 
-    if exit == "Y":
+    if cont == "N":
         print("Thank you for using our program. Have a great day!")
         break
-
-    # TODO: Invoice number and date

@@ -1,5 +1,5 @@
 # Program to plot a graph of total monthly sales for a year
-# Dates written: November 18, 2023 -
+# Dates written: November 18, 2023 - November 24, 2023
 # Author: Elliott Butt
 
 # import libraries
@@ -40,7 +40,6 @@ for amt in y_sales_list:
     else:
         colors_list.append(REG_COLOR)
 
-
 # output
 fig, ax = plt.subplots()
 
@@ -50,7 +49,6 @@ graph = ax.bar(x_months_list, y_sales_list, color=colors_list,
 ax.bar_label(graph, fmt="$%.2f")
 
 plt.title("Total Monthly Sales")
-# plt.legend(["MAX", "MIN", "REG"], loc="upper left", frameon="fancy") TODO: figure this out
-plt.gca().yaxis.set_major_formatter(StrMethodFormatter('${x:,.2f}'))
+plt.gca().yaxis.set_major_formatter(StrMethodFormatter('${x:.2f}'))
 plt.ylabel("Total Sales ($)")
 plt.show()
