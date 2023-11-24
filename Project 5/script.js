@@ -1,6 +1,6 @@
 // Program to inject customer info into HTML
 // Using a customer object and template literals
-// Date written: November 19, 2023
+// Date written: November 19, 2023 - November 23, 2023
 // Author: Elliott Butt
 
 // define customer object
@@ -164,5 +164,5 @@ html_insert = `
     </p>
 `;
 
-// inject html into DOM
+// inject html
 document.body.innerHTML = html_insert;
